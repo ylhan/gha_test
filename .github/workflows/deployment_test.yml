@@ -32,7 +32,7 @@ jobs:
       - uses: dorny/paths-filter@v3
         id: filter
         with:
-           base: ${{ steps.last-release.outputs.sha }}
+          base: ${{ steps.last-release.outputs.sha }}
           filters: |
             dags:
               - 'dags/**'
