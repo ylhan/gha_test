@@ -25,10 +25,10 @@ jobs:
         run: |
             tag=`gh release list | sed -n '2 p' | awk '{print $(NF -1);}'`
             echo "Tag: $tag"
-            sha=`git show-ref --tags | grep $tag | awk '{print $1;}'`
+            sha=`git show-ref --tags | grep "refs/tags/$tag" | awk '{print $1;}'`
             echo "SHA: $sha"
             main_sha=`git rev-parse main`
-            echo "main SHA: $sha"
+            echo "main SHA: $main_sha"
             if [ "${{ github.event_name }}" == "release" ]; then
                 echo "Using release latest release SHA for tag: $tag"
                 echo "::set-output name=sha::$sha"
