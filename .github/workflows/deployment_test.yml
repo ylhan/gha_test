@@ -27,14 +27,14 @@ jobs:
             echo "Tag: $tag"
             sha=`git show-ref --tags | grep "refs/tags/$tag" | awk '{print $1;}'`
             echo "SHA: $sha"
-            main_sha=`git rev-parse main`
-            echo "main SHA: $main_sha"
+            head_sha=`git rev-parse HEAD~1`
+            echo "head SHA: $head_sha"
             if [ "${{ github.event_name }}" == "release" ]; then
                 echo "Using release latest release SHA for tag: $tag"
                 echo "::set-output name=sha::$sha"
             else
-                echo "Using main SHA"
-                echo "::set-output name=sha::$main_sha"
+                echo "Using second latest SHA"
+                echo "::set-output name=sha::$head_sha"
             fi
         env:
             GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
