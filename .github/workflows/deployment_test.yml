@@ -16,9 +16,23 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: Getting sha for last release
+        id: last-release
+        shell: bash
+        run: |
+            tag=`gh release list | sed -n '2 p' | awk '{print $(NF -1);}'`
+            echo "Tag: $tag"
+            sha=`git show-ref --tags | grep $tag | awk '{print $1;}'`
+            echo "SHA: $sha"
+            echo "::set-output name=sha::$sha"
+        env:
+            GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
       - uses: dorny/paths-filter@v3
         id: filter
         with:
+           base: ${{ steps.last-release.outputs.sha }}
           filters: |
             dags:
               - 'dags/**'
