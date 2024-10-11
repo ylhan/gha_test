@@ -28,16 +28,16 @@ jobs:
               - 'plugins/plugins.zip'
 
       - name: Copy dags to Airflow's S3 Bucket
-        if: steps.filter.outputs.dags == 'true' || github.event_name == 'release'
+        if: steps.filter.outputs.dags == 'true'
         run: |
             echo "Copying dags to Airflow's S3 Bucket"
 
       - name: Copy requirements to Airflow's S3 Bucket
-        if: steps.filter.outputs.requirements == 'true' || github.event_name == 'release'
+        if: steps.filter.outputs.requirements == 'true'
         run: |
             echo "Copying requirements to Airflow's S3 Bucket"
             
       - name: Update test MWAA Environment
-        if: steps.filter.outputs.plugins == 'true' || steps.filter.outputs.requirements == 'true' || github.event_name == 'release'
+        if: steps.filter.outputs.plugins == 'true' || steps.filter.outputs.requirements == 'true'
         run: |
           echo "Updating test MWAA Environment"
