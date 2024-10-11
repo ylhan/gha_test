@@ -1,0 +1,41 @@
+name: Airflow Deploy
+
+on: # yamllint disable-line rule:truthy
+  workflow_dispatch:
+
+jobs:
+  deployment:
+    name: Deploying Airflow
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            dags:
+              - 'dags/**'
+            requirements:
+              - 'requirements/requirements.txt'
+            plugins:
+              - 'plugins/plugins.zip'
+
+      - name: Copy dags to Airflow's S3 Bucket
+        if: steps.filter.outputs.dags == 'true' || github.event_name == 'release'
+        run: |
+            echo "Copying dags to Airflow's S3 Bucket"
+
+      - name: Copy requirements to Airflow's S3 Bucket
+        if: steps.filter.outputs.requirements == 'true' || github.event_name == 'release'
+        run: |
+            echo "Copying requirements to Airflow's S3 Bucket"
+            
+      - name: Update test MWAA Environment
+        if: steps.filter.outputs.plugins == 'true' || steps.filter.outputs.requirements == 'true' || github.event_name == 'release'
+        run: |
+          echo "Updating test MWAA Environment"
